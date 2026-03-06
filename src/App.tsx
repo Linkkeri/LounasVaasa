@@ -5,7 +5,7 @@ import { fetchLunchMenus, RestaurantMenu } from './services/lunchService';
 
 export default function App() {
   const [menus, setMenus] = useState<RestaurantMenu[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("2026-03-05");
@@ -27,7 +27,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    loadMenus();
+    // Removed automatic loadMenus() call
   }, []);
 
   const today = new Date(selectedDate);
@@ -108,11 +108,26 @@ export default function App() {
               <h2 className="text-red-900 font-semibold text-lg">Hups! Jotain meni vikaan</h2>
               <p className="text-red-700 mt-2 text-sm">{error}</p>
               <button 
-                onClick={loadMenus}
+                onClick={() => loadMenus()}
                 className="mt-6 px-6 py-2.5 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-colors shadow-lg shadow-red-200"
               >
                 Yritä uudelleen
               </button>
+            </motion.div>
+          ) : menus.length === 0 ? (
+            <motion.div 
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center py-24 text-center"
+            >
+              <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-6">
+                <Utensils size={32} />
+              </div>
+              <h2 className="text-xl font-semibold">Tervetuloa lounaslistojen pariin!</h2>
+              <p className="text-gray-500 mt-2 max-w-sm">
+                Valitse päivämäärä ylhäältä ja paina "Hae lounas" nähdäksesi päivän tarjonnan.
+              </p>
             </motion.div>
           ) : (
             <motion.div 
